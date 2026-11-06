@@ -1,12 +1,22 @@
+import { Suspense } from "react";
 import { onBoardCurrentUser } from "@/features/auth/action/onboard";
 
-export default async function RootLayout({
+async function AuthSync() {
+    await onBoardCurrentUser();
+    return null;
+}
+
+export default function RootLayout({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    await onBoardCurrentUser();
-
-    return <>{children}</>;
+    return (
+        <>
+            <Suspense fallback={null}>
+                <AuthSync />
+            </Suspense>
+            {children}
+        </>
+    );
 }
-
